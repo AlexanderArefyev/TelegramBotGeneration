@@ -1,6 +1,4 @@
 # TelegramBotGeneration
 
-Telegram bot to generate: 
-  nicknames,
-  passwords,
-  and picture avatars.
+Телеграм бот для генерации никнеймов и паролей. 
+А также для подбора аватарок для личного профиля.
