@@ -2,24 +2,13 @@ import configBot
 import btnConfig
 import asyncio
 import algoForBot
-import search_img
+import random
+import os
 from aiogram import Bot, Dispatcher, executor, types
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher.filters.state import StatesGroup, State
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
 
 bot = Bot(token=configBot.API_TOKEN) # Токен бота
-dp = Dispatcher(bot, storage=MemoryStorage()) # События и обновление в боте 
-dp.middleware.setup(LoggingMiddleware())
+dp = Dispatcher(bot) # События и обновление в боте 
 
-class Wait(StatesGroup):
-    
-    name_img = State()
-
-@dp.message_handler(state=Wait.name_img)
-async def img(message: types.Message):  
-          
-    await message.answer(search_img.search_img(name_req=message.text))
 
 # Запуск бота
 @dp.message_handler(commands=['start'])
@@ -37,7 +26,7 @@ async def gen(message: types.Message):
         
         nickname = await message.answer(algoForBot.gen_nickname())
         txt_nick = await message.answer(text = 'Через 2 минуты я удалю это, чтобы не мусорить в нашем чате.')
-        await asyncio.sleep(10) # Время для удаления записей 
+        await asyncio.sleep(120) # Время для удаления записей 
                                 
         # Проверка на удаление
         try:
@@ -52,7 +41,7 @@ async def gen(message: types.Message):
         txt_pass = await message.answer(text = 'Ваш пароль:')
         cur_pass = await message.answer(algoForBot.gen_password())
         cur_text = await message.answer(text = f'{message.from_user.first_name}, для безопасности через 2 минуты пароль будет удален.')            
-        await asyncio.sleep(10) # Время для удаления записей                    
+        await asyncio.sleep(120) # Время для удаления записей                    
         
         # Проверка на удаление
         try:
@@ -64,22 +53,30 @@ async def gen(message: types.Message):
             pass
         
     elif message.text == 'Найти аватарку':
+
+        dir = '/Users/aleksandrarefev/Downloads/TelegramBotPython/img/'
+        i = random.choice(os.listdir(dir))
+        img = dir + i
+                    
+        with open(img, 'rb') as pict:
+            p = await bot.send_photo(message.chat.id, pict)
+
+        txt_p = await message.answer(text = 'Через 2 минуты я удалю это, чтобы не мусорить в нашем чате.')
         
-        txt_img = await message.answer(text='Что Вам найти?')
-        await Wait.name_img.set()
-        # await asyncio.sleep(10)
+        await asyncio.sleep(120)
         
         # Проверка на удаление                
-        # try:
-        #     await txt_img.delete()
-        #     await message.delete()
-        # except:
-        #     pass 
+        try:
+            await message.delete()
+            await p.delete()
+            await txt_p.delete()
+        except:
+            pass
         
     else: # Если задан неизвестный текст
         if message.text:
             error_msg = await message.answer(text = f'{message.from_user.first_name}, Я не понимаю Вас. \nИспользуйте кнопки управления.')
-            await asyncio.sleep(5)
+            await asyncio.sleep(120)
             
             # Проверка на удаление                
             try:

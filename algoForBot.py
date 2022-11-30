@@ -4,9 +4,9 @@ def gen_nickname():
     
     list_1 = ['b', 'c', 'd', 'f', 'g', 'j', 'k', 
             'l', 'm', 'n', 'p', 'q', 'r', 's', 
-            't', 'w', 'x', 'z']
+            't', 'w', 'x', 'z', '']
     
-    list_2 = ['a', 'e', 'i', 'u', 'y']
+    list_2 = ['a', 'e', 'i', 'u', 'y', '']
 
     lenght = [1, 2, 3] # Длина никнейма
     n = random.choice(lenght)
@@ -15,7 +15,6 @@ def gen_nickname():
     count = 0
     
     join = list_1 + list_2
-    first = random.choice(join)
     last = random.choice(join)
     
     # Пока не закончится случайная длина
@@ -31,12 +30,11 @@ def gen_nickname():
         
         count += 1
     
-    # Со списка в строку
-    first_letter = ''.join(first)        
+    # Со списка в строку        
     nick = ''.join(nickname)
     last_letter = ''.join(last)
     # Объединить слово
-    full = first_letter + nick + last_letter
+    full = nick + last_letter
     # Возврощаем строку
     return full.title()
     
